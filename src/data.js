@@ -1670,7 +1670,7 @@ const movies = [
     director: 'Lasse Hallström',
     duration: '1h 33min',
     genre: ['Drama', 'Family'],
-    score: 8.1
+    score: ''
   },
   {
     title: 'The Maltese Falcon',

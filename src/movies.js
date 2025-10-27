@@ -82,7 +82,59 @@ function orderAlphabetically(moviesArray) {
 }
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
-function turnHoursToMinutes(moviesArray) {}
+function turnHoursToMinutes(moviesArray) {
+    return moviesArray.map(movie => {
+        const hour = movie.duration.match(/(\d+)h/);
+        const minute = movie.duration.match(/(\d+)min/);
+        let durationMin = 0;
+
+        if (hour && !minute) {
+            durationMin = Number(hour[1] * 60);
+        } else if (minute && !hour) {
+            durationMin = Number(minute[1]);
+        } else {
+            durationMin = Number((hour[1] * 60)) + Number(minute[1]);
+        }
+        
+        return {...movie, duration: durationMin};
+    });
+}
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
-function bestYearAvg(moviesArray) {}
+function bestYearAvg(moviesArray) {
+    if (!moviesArray.length) {
+        return null;
+    }
+
+    const movieScore = moviesArray.reduce((bestMovie, movie) => {
+        const moviesInside = bestMovie.find(movieYear => movieYear.year === movie.year);
+
+        if (!moviesInside) {
+            bestMovie.push({'year': movie.year, 'countMovie': 1, 'score': movie.score, 'avg': movie.score});
+        } else {
+            moviesInside.score += movie.score;
+            moviesInside.countMovie ++;
+            moviesInside.avg = moviesInside.score / moviesInside.countMovie;
+        }
+                        
+        return bestMovie;
+    }, [])
+    .toSorted((movie1, movie2) => {
+        if (movie1.avg > movie2.avg) {
+            return -1;
+        } else if (movie1.avg < movie2.avg) {
+            return 1;
+        } else {
+            if(movie1.year > movie2.year) {
+                return 1;
+            } else if (movie1.year < movie2.year) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    })
+    .slice(0,1);
+
+    return `The best year was ${movieScore[0].year} with an average score of ${movieScore[0].avg}`;
+}
